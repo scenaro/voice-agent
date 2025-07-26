@@ -1,0 +1,60 @@
+import useTool from ":app/hooks/useTool";
+import { useEffect, useState } from "preact/hooks";
+
+
+export default function Cart() {
+  const dataAdd = useTool("data_bucket_cart_add");
+  const dataRemove = useTool("data_bucket_cart_remove");
+  const dataReplace = useTool("data_bucket_cart_replace");
+
+  const [count, setCount] = useState(0);
+  const [cart, setCart] = useState<string[]>([]);
+
+  console.log("cart:", cart);
+  useEffect(() => {
+    if (dataAdd) {
+      console.log("data_bucket_cart_add - data received:", dataAdd);
+      setCount(count + 1);
+      setCart([...cart, dataAdd.id]);
+    }
+  }, [dataAdd]);
+
+  useEffect(() => {
+    if (dataRemove) {
+      console.log("data_bucket_cart_remove - data received:", dataRemove);
+      setCount(count - 1);
+      setCart(rmItem([...cart], dataRemove.id));
+    }
+  }, [dataRemove]);
+
+  useEffect(() => {
+    if (dataReplace) {
+      console.log("data_bucket_cart_replace - data received:", dataReplace);
+      setCart(cart.slice(cart.indexOf(dataReplace.id), 1));
+      setCart(rmItem([...cart], dataReplace.newId));
+      setCount(cart.length);
+    }
+  }, [dataReplace]);
+
+  return (
+    <div className="m-10 bg-orange-100">
+      Panier: {count}
+      <ul>
+        {cart.map((id, i) => (
+          <li key={id + '-' + i}>{id}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+
+function rmItem(arr: string[], item: string) {
+  const index = arr.indexOf(item);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+
+  return arr;
+}

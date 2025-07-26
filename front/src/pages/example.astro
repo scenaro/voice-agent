@@ -1,0 +1,21 @@
+---
+import ExampleApp from ':themes/example/components/ExampleApp';
+import Layout from ':layouts/Layout.astro';
+import { LoadingSVG } from ':app/components/ui/LoadingSVG';
+
+export const prerender = false;
+
+const title = "Scenaro Voice Agent - Example";
+const description = "Voice agent";
+---
+
+<Layout title={title} description={description}>
+	<ExampleApp client:only="preact">
+		<div slot="fallback" class="flex items-center justify-center h-screen">
+			<div class="flex items-center justify-center h-32 w-32 border-b-2 border-white mx-auto mb-4">
+				<LoadingSVG />
+				<span class="ml-4">Chargement...</span>
+			</div>
+		</div>
+	</ExampleApp>
+</Layout>

@@ -1,0 +1,804 @@
+[
+  {
+    "feature_benchmark_products_compare": {
+      "description": "Récupérer et préparer les données des produits sélectionnés pour la comparaison. Cette étape doit TOUJOURS être exécutée AVANT feature_benchmark_products_generate.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "criterias": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "price",
+                "vintage",
+                "region",
+                "domain",
+                "grape",
+                "alcohol_content",
+                "sugar_content",
+                "acid_content",
+                "body",
+                "finish"
+              ]
+            },
+            "description": "Les caractéristiques de comparaison à utiliser pour récupérer les données des produits"
+          }
+        },
+        "required": [
+          "criterias"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifiant unique du produit"
+                },
+                "presentation": {
+                  "type": "string",
+                  "description": "Présentation détaillée du produit avec ses caractéristiques principales"
+                }
+              },
+              "required": [
+                "id",
+                "presentation"
+              ]
+            },
+            "description": "Array de produits avec leur présentation pour la comparaison"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "feature_benchmark_products_generate": {
+      "description": "Générer un tableau de benchmark des produits en utilisant les données récupérées par feature_benchmark_products_compare. Cette étape doit TOUJOURS être exécutée APRÈS feature_benchmark_products_compare.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "criterias": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "price",
+                "vintage",
+                "region",
+                "domain",
+                "grape",
+                "alcohol_content",
+                "sugar_content",
+                "acid_content",
+                "body",
+                "finish"
+              ]
+            },
+            "description": "Les critères de comparaison à afficher dans le tableau"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nom du produit"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Identifiant unique du produit"
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "Résumé descriptif du produit qui fait ressortir UN élément différenciant par rapport aux autres produits de la sélection. Ce summary doit mettre en avant ce qui rend ce produit unique ou spécial dans le contexte de la comparaison."
+                },
+                "criterias": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string",
+                        "enum": [
+                          "price",
+                          "vintage",
+                          "region",
+                          "domain",
+                          "grape",
+                          "alcohol_content",
+                          "sugar_content",
+                          "acid_content",
+                          "body",
+                          "finish"
+                        ],
+                        "description": "Clé du critère"
+                      },
+                      "value": {
+                        "type": "string",
+                        "description": "Valeur du critère"
+                      },
+                      "indicator": {
+                        "type": "string",
+                        "enum": [
+                          "+",
+                          "-",
+                          "="
+                        ],
+                        "description": "Indicateur de performance (+ pour positif, - pour négatif, = pour neutre)"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "value",
+                      "indicator"
+                    ]
+                  },
+                  "description": "Les valeurs des critères pour ce produit avec indicateurs de performance"
+                }
+              },
+              "required": [
+                "name",
+                "id",
+                "summary",
+                "criterias"
+              ]
+            },
+            "description": "Liste des produits à comparer dans le tableau de benchmark (doit provenir de feature_benchmark_products_compare)"
+          }
+        },
+        "required": [
+          "criterias",
+          "items"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles du tableau généré"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "feature_ask_knowledge_base_question": {
+      "description": "Interroger la base de connaissances pour répondre à une question",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "La question à poser à la base de connaissances"
+          }
+        },
+        "required": [
+          "question"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "score": {
+                  "type": "number",
+                  "description": "Score de pertinence du contenu (0-1)"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Titre du contenu trouvé"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Contenu textuel de la réponse"
+                }
+              },
+              "required": [
+                "score",
+                "title",
+                "content"
+              ]
+            },
+            "description": "Array de contenus provenant du RAG avec score, titre et contenu"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "feature_product_presentation_display": {
+      "description": "Afficher une fiche produit complète avec les informations de la bouteille, le prix, la disponibilité, etc.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin à afficher"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identifiant unique du produit"
+              },
+              "presentation": {
+                "type": "string",
+                "description": "Présentation résumée du produit"
+              }
+            },
+            "required": [
+              "id",
+              "presentation"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "feature_product_presentation_producer": {
+      "description": "Afficher les informations du producteur du vin, comme des photos et l'histoire du domaine",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin dont le domaine est à afficher"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identifiant unique du domaine"
+              },
+              "presentation": {
+                "type": "string",
+                "description": "Présentation du domaine"
+              }
+            },
+            "required": [
+              "id",
+              "presentation"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "feature_search_products_search": {
+      "description": "Rechercher des produits en fonction de critères spécifiques",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Le label du produit à rechercher"
+          }
+        },
+        "required": [
+          "label"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "presentation": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "total_count": {
+                "type": "number"
+              }
+            }
+          },
+          "state": {
+            "type": "string",
+            "description": "Indique si la liste a été affichée ou non."
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Si la liste a été affichée, lance la fonction feature_search_products_highlight directement."
+          }
+        },
+        "required": [
+          "state"
+        ]
+      }
+    }
+  },
+  {
+    "feature_search_products_highlight": {
+      "description": "Mettre en valeur certains produits parmi les produits trouvés par rapport au contraintes de recherche",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "L'identifiant du produit à mettre en valeur"
+                },
+                "explanation": {
+                  "type": "string",
+                  "description": "L'explication de la mise en valeur du produit"
+                }
+              },
+              "required": [
+                "id",
+                "explanation"
+              ]
+            }
+          }
+        }
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles des produits mis en valeur"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "feature_conclusion_finish": {
+      "description": "Finis la conversation sans commande, si l'utilisateur n'a pas fini par exemple ou qu'il ne souhaite pas aller plus loin",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [
+          ""
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles de fin de conversation"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "feature_conclusion_order": {
+      "description": "Lance la commande et le paiement pour les produits mis dans le panier et termine la conversation",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [
+          ""
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles de la commande"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "data_bucket_selection_add": {
+      "description": "Ajouter un vin à la sélection",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin à ajouter"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles de la sélection"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "data_bucket_selection_remove": {
+      "description": "Supprimer un vin de la sélection",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin à supprimer"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles de la sélection"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "data_bucket_selection_replace": {
+      "description": "Remplacer un vin de la sélection",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin à remplacer"
+          },
+          "newId": {
+            "type": "string",
+            "description": "L'identifiant du nouveau vin"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles de la sélection"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "data_bucket_cart_add": {
+      "description": "Ajouter un vin au panier",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin à ajouter"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles du panier"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "data_bucket_cart_remove": {
+      "description": "Supprimer un vin du panier",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin à supprimer"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles du panier"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "data_bucket_cart_replace": {
+      "description": "Remplacer un vin du panier",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "L'identifiant du vin à remplacer"
+          },
+          "newId": {
+            "type": "string",
+            "description": "L'identifiant du nouveau vin"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles du panier"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  },
+  {
+    "session_memory_update": {
+      "description": "Mettre à jour la mémoire de la session",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "memory": {
+            "type": "string",
+            "description": "La mémoire à mettre à jour"
+          }
+        },
+        "required": [
+          "memory"
+        ]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "État de l'opération (success, error)"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Instruction pour la suite de la conversation"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données optionnelles de la mémoire de session"
+          }
+        },
+        "required": [
+          "state",
+          "instruction"
+        ]
+      }
+    }
+  }
+]

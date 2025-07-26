@@ -1,0 +1,31 @@
+services:
+  agent:
+    build:
+      # build from the current directory
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    command: bash
+    tty: true
+    network_mode: host
+    volumes:
+      - ../../agent:/app
+    environment:
+      - ENV_MODE=development
+
+  front:
+    build:
+      # build from the current directory
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    command: bash
+    tty: true
+    ports:
+      - 4321:4321
+    volumes:
+      - ../../front:/app
+    depends_on:
+      - agent
+    environment:
+      - NODE_ENV=development

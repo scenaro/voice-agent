@@ -1,0 +1,232 @@
+@import ":app/assets/css/app.css";
+
+@import "./animations.css";
+
+/* -----------------------------------------------------------------------------
+  App
+----------------------------------------------------------------------------- */
+#sc-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Toast */
+  .sc-toaster {
+    .sc-toast {
+      @apply px-4 py-2 rounded-lg shadow-lg;
+
+      &.sc-toast-error {
+        @apply bg-red-600 text-white;
+      }
+
+      &.sc-toast-success {
+        @apply bg-green-600 text-white;
+      }
+
+      &.sc-toast-info {
+        @apply bg-blue-600 text-white;
+      }
+
+      .sc-toast-content {
+        @apply flex items-center justify-between;
+
+        .sc-toast-message {
+          @apply text-sm font-medium;
+        }
+
+        .sc-toast-dismiss {
+          @apply ml-4 hover:text-gray-400 transition-colors;
+        }
+      }
+    }
+  }
+
+  .sc-btn {
+    @apply flex flex-row border-blue-100 transition-all border ease-out duration-250 text-xs px-2 py-2 uppercase font-semibold cursor-pointer rounded-md;
+
+    &.sc-btn-primary {
+      @apply bg-blue-950 hover:bg-blue-900 text-white;
+    }
+
+    &.sc-btn-secondary {
+      @apply bg-gray-100 text-gray-600 hover:bg-gray-200;
+    }
+
+    &.sc-btn-destructive {
+      @apply border-red-500 bg-gray-50 hover:bg-red-900/50 text-red-600;
+    }
+
+    &.sc-btn-medium {
+      @apply text-sm px-2 py-2 font-semibold;
+    }
+
+    &.sc-btn-large {
+      @apply text-lg px-4 py-2 font-normal tracking-wider;
+    }
+  }
+}
+
+#sc-main {
+  @apply relative p-4;
+}
+
+#sc-room {
+}
+
+/* -----------------------------------------------------------------------------
+  Agent
+----------------------------------------------------------------------------- */
+
+#sc-agent {
+}
+
+#sc-agent-content {
+  @apply relative flex flex-col items-center justify-between;
+}
+
+#sc-agent-visualizer {
+}
+
+#sc-agent-audio-track {
+  @apply min-h-20 relative;
+
+  .sc-agent-audio-track-btn {
+    @apply animate-[fadeIn_0.3s_ease-out];
+  }
+}
+
+#sc-agent-audio-track-start {
+}
+
+#sc-agent-audio-track-start-content {
+  .sc-agent-audio-track-start-btn {
+    @apply relative text-sm md:text-base;
+
+    .track-start-btn-loader {
+      @apply absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2;
+    }
+  }
+}
+
+#sc-agent-audio-track-toolbar {
+}
+
+#sc-agent-audio-track-toolbar-content {
+  /* @apply opacity-0 translate-y-6 animate-[fadeInUp_0.3s_ease-out_forwards]; */
+  @apply flex items-center justify-between;
+}
+
+#sc-agent-audio-visualizer {
+  @apply flex flex-col items-center justify-between;
+}
+
+/* -----------------------------------------------------------------------------
+  DeviceSelector
+----------------------------------------------------------------------------- */
+
+#sc-device-selector {
+  @apply relative;
+}
+
+#sc-device-selector-btn {
+  @apply hover:opacity-50 transition-all duration-100;
+}
+
+#sc-device-selector-list {
+  @apply absolute left-0 top-12 text-gray-200 text-left border-gray-400 border-2 z-10 w-[280px] bg-white shadow-lg rounded-sm;
+
+  .sc-device-selector-item {
+    @apply bg-white text-gray-500 text-xs py-2 px-2 cursor-pointer hover:bg-gray-400 hover:text-white;
+
+    &.active {
+      @apply text-gray-600 bg-gray-100;
+    }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+  MicrophoneButton
+----------------------------------------------------------------------------- */
+#sc-microphone-button-content {
+  @apply flex items-center gap-1 p-4;
+
+  #sc-microphone-btn {
+    @apply flex items-center;
+  }
+}
+
+#sc-microphone-button-volume-bar {
+  @apply w-1 h-2 rounded-sm transition-colors duration-150 bg-gray-600;
+
+  &.active {
+    @apply bg-green-400;
+  }
+
+  #sc-microphone-volume-bars {
+    @apply flex gap-1 items-end ml-2;
+  }
+}
+
+/* Agent state */
+.sc-agent-state-listening {
+  color: rgb(34, 197, 94);
+}
+
+.sc-agent-state-thinking {
+  color: rgb(59, 130, 246);
+}
+
+.sc-agent-state-speaking {
+  color: rgb(168, 85, 247);
+}
+
+.sc-agent-state-disconnected {
+  color: rgb(156, 163, 175);
+}
+
+/* -----------------------------------------------------------------------------
+  Simple Audio Indicator Animations
+----------------------------------------------------------------------------- */
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse-medium {
+  animation: pulse-medium 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse-fast {
+  animation: pulse-fast 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes pulse-medium {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes pulse-fast {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}

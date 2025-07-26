@@ -1,0 +1,41 @@
+{
+  "name": "front",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "bunx --bun astro dev",
+    "build": "bun run astro check && bun run astro build",
+    "preview": "bun run astro preview",
+    "astro": "bunx --bun astro",
+    "serve": "bun --bun ./dist/server/entry.mjs"
+  },
+  "dependencies": {
+    "@astrojs/preact": "^4.1.0",
+    "@hedystia/astro-bun": "^0.3.2",
+    "@iconify-json/lucide": "^1.2.56",
+    "@iconify-json/mdi": "^1.2.3",
+    "@livekit/components-react": "^2.9.13",
+    "@tailwindcss/vite": "^4.1.11",
+    "astro": "^5.11.0",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "evemit": "^1.0.4",
+    "livekit-client": "^2.15.2",
+    "livekit-server-sdk": "^2.13.1",
+    "preact": "^10.26.9",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.11",
+    "tailwindcss-animate": "^1.0.7",
+    "wouter-preact": "^3.7.1",
+    "zod": "^3.25.75"
+  },
+  "devDependencies": {
+    "@iconify/react": "^6.0.0",
+    "@types/bun": "^1.2.18",
+    "astro-icon": "^1.1.5"
+  },
+  "overrides": {
+    "react": "npm:@preact/compat@latest",
+    "react-dom": "npm:@preact/compat@latest"
+  }
+}

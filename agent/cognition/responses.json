@@ -1,0 +1,194 @@
+{
+  "feature_benchmark_products_compare": {
+    "state": "success",
+    "instruction": "Les données des produits ont été récupérées. Vous pouvez maintenant utiliser feature_benchmark_products_generate pour créer le tableau comparatif avec ces données.",
+    "data": [
+      {
+        "id": "L001",
+        "presentation": "Château Margaux 2018 - Premier grand cru classé de Margaux, vin rouge exceptionnel avec des arômes de fruits noirs, de cèdre et de tabac. Vieillissement en fûts de chêne pendant 18 mois. Prix: 850€"
+      },
+      {
+        "id": "L002",
+        "presentation": "Château Lafite Rothschild 2019 - Premier grand cru classé de Pauillac, vin rouge prestigieux avec des notes de cassis, de cèdre et de graphite. Vieillissement en fûts de chêne neufs. Prix: 1200€"
+      }
+    ]
+  },
+  "feature_benchmark_products_generate": {
+    "state": "success",
+    "instruction": "Le tableau comparatif a été généré avec succès. Présentez les résultats de manière claire et structurée, en mettant en avant les différences clés entre les produits et en guidant le client dans sa décision.",
+    "data": {}
+  },
+  "feature_conclusion_finish": {
+    "state": "success",
+    "instruction": "La conversation a été terminée. Merci de votre visite !",
+    "data": {}
+  },
+  "feature_conclusion_order": {
+    "state": "success",
+    "instruction": "Votre commande a été finalisée avec succès. Vous recevrez un email de confirmation.",
+    "data": {}
+  },
+  "feature_ask_knowledge_base_question": {
+    "state": "success",
+    "instruction": "Voici les informations de la base de connaissances qui répondent à votre question.",
+    "data": [
+      {
+        "score": 0.95,
+        "title": "Guide des accords mets-vins",
+        "content": "Les vins rouges s'accordent parfaitement avec les viandes rouges, les fromages affinés et les plats en sauce. Pour un dîner entre amis, privilégiez des vins rouges de Bordeaux ou du Languedoc-Roussillon."
+      }
+    ]
+  },
+  "feature_search_products_search": {
+    "data": {
+      "products": [
+        {
+          "id": "L001",
+          "presentation": "Château Margaux 2018 - Grand cru classé de Margaux, vin rouge exceptionnel - 850€"
+        },
+        {
+          "id": "L002",
+          "presentation": "Château Lafite Rothschild 2019 - Premier grand cru classé de Pauillac - 1200€"
+        },
+        {
+          "id": "L003",
+          "presentation": "Château Latour 2017 - Premier grand cru classé de Pauillac - 1100€"
+        },
+        {
+          "id": "L004",
+          "presentation": "Château Mouton Rothschild 2020 - Premier grand cru classé de Pauillac - 950€"
+        },
+        {
+          "id": "L005",
+          "presentation": "Château Haut-Brion 2018 - Premier grand cru classé de Pessac-Léognan - 800€"
+        },
+        {
+          "id": "L006",
+          "presentation": "Château Cheval Blanc 2019 - Premier grand cru classé de Saint-Émilion - 1300€"
+        },
+        {
+          "id": "L007",
+          "presentation": "Château Ausone 2017 - Premier grand cru classé de Saint-Émilion - 1400€"
+        },
+        {
+          "id": "L008",
+          "presentation": "Château Pétrus 2018 - Vin de Pomerol, l'un des plus prestigieux - 3500€"
+        },
+        {
+          "id": "L009",
+          "presentation": "Château Le Pin 2019 - Micro-cuvée de Pomerol, très rare - 2800€"
+        },
+        {
+          "id": "L010",
+          "presentation": "Château Palmer 2020 - Troisième grand cru classé de Margaux - 450€"
+        },
+        {
+          "id": "L011",
+          "presentation": "Château Ducru-Beaucaillou 2018 - Deuxième grand cru classé de Saint-Julien - 380€"
+        },
+        {
+          "id": "L012",
+          "presentation": "Château Léoville Las Cases 2019 - Deuxième grand cru classé de Saint-Julien - 420€"
+        },
+        {
+          "id": "L013",
+          "presentation": "Château Pichon Longueville Comtesse 2017 - Deuxième grand cru classé de Pauillac - 350€"
+        },
+        {
+          "id": "L014",
+          "presentation": "Château Cos d'Estournel 2020 - Deuxième grand cru classé de Saint-Estèphe - 400€"
+        },
+        {
+          "id": "L015",
+          "presentation": "Château Montrose 2018 - Deuxième grand cru classé de Saint-Estèphe - 380€"
+        },
+        {
+          "id": "L016",
+          "presentation": "Château Lynch-Bages 2019 - Cinquième grand cru classé de Pauillac - 280€"
+        },
+        {
+          "id": "L017",
+          "presentation": "Château Pontet-Canet 2017 - Cinquième grand cru classé de Pauillac - 320€"
+        },
+        {
+          "id": "L018",
+          "presentation": "Château Grand-Puy-Lacoste 2020 - Cinquième grand cru classé de Pauillac - 180€"
+        },
+        {
+          "id": "L019",
+          "presentation": "Château Batailley 2018 - Cinquième grand cru classé de Pauillac - 120€"
+        },
+        {
+          "id": "L020",
+          "presentation": "Château Haut-Batailley 2019 - Cinquième grand cru classé de Pauillac - 140€"
+        }
+      ],
+      "total_count": 20
+    },
+    "state": "J'ai trouvé 20 vins de Bordeaux pour vous. Je vais maintenant mettre en valeur les meilleures options.",
+    "instruction": "Utilisez feature_search_products_highlight avec les 4 vins les plus pertinents."
+  },
+  "feature_search_products_highlight": {
+    "state": "success",
+    "instruction": "Les vins les plus pertinents sont mis en avant. Réponds de façon concise en indiquant simplement que les meilleures options sont affichées et que l'utilisateur peut demander plus d'informations sur un vin spécifique.",
+    "data": {
+      "product_ids": [
+        "L001",
+        "L002",
+        "L003",
+        "L005"
+      ]
+    }
+  },
+  "feature_product_presentation_display": {
+    "state": "success",
+    "instruction": "La fiche produit a été affichée.",
+    "data": {
+      "id": "L001",
+      "presentation": "Château Margaux 2018 - Grand cru classé de Margaux, vin rouge exceptionnel avec des arômes de fruits noirs, de cèdre et de tabac. Vieillissement en fûts de chêne pendant 18 mois. Prix: 850€"
+    }
+  },
+  "feature_product_presentation_producer": {
+    "state": "success",
+    "instruction": "Les informations du producteur ont été affichées.",
+    "data": {
+      "id": "DOM001",
+      "presentation": "Château Margaux - Domaine historique fondé au 16ème siècle, propriété de la famille Mentzelopoulos depuis 1977. 262 hectares de vignes, production annuelle de 150 000 bouteilles. Domaine reconnu pour l'excellence de ses vins et son engagement dans la viticulture durable."
+    }
+  },
+  "data_bucket_cart_add": {
+    "state": "success",
+    "instruction": "Le produit a été ajouté à votre panier.",
+    "data": {}
+  },
+  "data_bucket_cart_remove": {
+    "state": "success",
+    "instruction": "Le produit a été supprimé de votre panier.",
+    "data": {}
+  },
+  "data_bucket_cart_replace": {
+    "state": "success",
+    "instruction": "Le produit a été remplacé dans votre panier.",
+    "data": {}
+  },
+  "data_bucket_selection_add": {
+    "state": "success",
+    "instruction": "Le produit a été ajouté à votre sélection.",
+    "data": {}
+  },
+  "data_bucket_selection_remove": {
+    "state": "success",
+    "instruction": "Le produit a été supprimé de votre sélection.",
+    "data": {}
+  },
+  "data_bucket_selection_replace": {
+    "state": "success",
+    "instruction": "Le produit a été remplacé dans votre sélection.",
+    "data": {}
+  },
+  "session_memory_update": {
+    "state": "success",
+    "instruction": "La mémoire de session a été mise à jour.",
+    "data": {}
+  }
+}
