@@ -1,11 +1,11 @@
-# Agent Vocal IA - Scenaro XP Voice Agent
+# Agent Vocal IA - Scenaro Voice Agent
 
 ## Architecture
 
 ### Structure du projet
 
 - agent/ : Backend Python
-- front/ : Frontend Next.js (basé sur un boilerplate LiveKit trouvé dans leurs dépôts)
+- front/ : Frontend Astro.js
 - Docker : Docker compose pour l'environnement de développement
 - justfile : (optionnel) Fichier de commandes.
 
@@ -53,13 +53,13 @@ Dans le container, installer les dépendances :
 bun install
 ```
 
-Lancer Next.js (dev) :
+Lancer Astro.js (dev) :
 
 ```bash
 bun dev
 ```
 
-L'interface web sera disponible sur : <http://localhost:3000>
+L'interface web sera disponible sur : <http://localhost:4321>
 
 ## Production
 

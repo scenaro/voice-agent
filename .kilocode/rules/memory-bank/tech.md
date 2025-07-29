@@ -131,6 +131,10 @@ dev-agent: Bash dans container agent
 dev-front: Bash dans container frontend
 setup: Copie des fichiers .env d'exemple
 clean: Nettoyage des artifacts
+
+# Production builds
+prod-build-agent [tag]: Build image agent production
+prod-build-front [tag]: Build image frontend production
 ```
 
 #### Scripts Agent
@@ -160,9 +164,16 @@ bun serve         # Serveur production
 
 ## Configuration
 
+### Configuration Astro Avancée
+
+- **Gestion d'environnement dynamique** : Configuration `.env.${NODE_ENV}` avec validation
+- **Validation Zod** : Variables d'environnement validées avec schéma strict
+- **Output static** : Build optimisé pour serveur Bun en production
+- **Host configuré** : Support domaines autorisés incluant tunnels zrok
+
 ### Variables d'Environnement
 
-#### Agent (`.env`)
+#### Agent (`.env.development`)
 
 - `OPENAI_API_KEY` : Clé API OpenAI (GPT-4o)
 - `CARTESIA_API_KEY` : Clé API Cartesia (TTS)
@@ -171,11 +182,13 @@ bun serve         # Serveur production
 - `LIVEKIT_API_KEY` : Clé API LiveKit
 - `LIVEKIT_API_SECRET` : Secret API LiveKit
 
-#### Frontend (`.env`)
+#### Frontend (`.env.${NODE_ENV}`)
 
-- `LIVEKIT_API_KEY` : Clé API LiveKit (génération tokens)
-- `LIVEKIT_API_SECRET` : Secret API LiveKit
-- `LIVEKIT_URL` : URL serveur LiveKit
+- `NODE_ENV` : Environment (development/production)
+- `APP_ENV` : Application environment (dev/prod/test, optionnel)
+- `LIVEKIT_URL` : URL serveur LiveKit (public)
+- `LIVEKIT_API_KEY` : Clé API LiveKit (secret, génération tokens)
+- `LIVEKIT_API_SECRET` : Secret API LiveKit (secret)
 
 ### Limites et Contraintes
 
@@ -199,7 +212,23 @@ bun serve         # Serveur production
 - **Hot-reload** : Développement en temps réel
 - **Logs centralisés** : Debugging facilité
 
-### Production (Future)
+### Production
+
+#### Containers Docker
+
+- **Agent Production** : [`docker/prod/agent.Dockerfile`](docker/prod/agent.Dockerfile)
+  - Base Ubuntu 24.04
+  - uv pour gestion dépendances Python rapide
+  - Build optimisé avec cache des dépendances
+  - Port 7880, commande `uv run main.py`
+
+- **Frontend Production** : [`docker/prod/front.Dockerfile`](docker/prod/front.Dockerfile)
+  - Build multi-stage avec Bun.js
+  - Base Ubuntu 24.04
+  - Build optimisé avec cache et image allégée
+  - Port 4321, commande `bun run serve`
+
+#### Infrastructure Production
 
 - **LiveKit Cloud** : Gestion des sessions de conversation
 - **Edge deployment** : Latence minimisée

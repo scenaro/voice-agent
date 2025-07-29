@@ -32,6 +32,7 @@ agent/
 ```
 front/
 ├── package.json               # Configuration Bun/Astro
+├── astro.config.mjs          # Configuration Astro avancée avec validation
 ├── src/
 │   ├── pages/
 │   │   ├── index.astro        # Page d'accueil simple
@@ -44,6 +45,14 @@ front/
 │   └── themes/
 │       ├── example/           # Thème d'exemple avec ExampleApp.tsx
 │       └── scenaro/           # Thème Scenaro (en préparation)
+```
+
+### Infrastructure de Production (`docker/prod/`)
+
+```
+docker/prod/
+├── agent.Dockerfile          # Container agent Python optimisé
+└── front.Dockerfile          # Container frontend multi-stage
 ```
 
 ## Composants Clés
@@ -151,8 +160,15 @@ Les outils sont organisés en 6 catégories :
 ### 4. Environnement de Développement
 
 - Docker Compose pour isolation
-- [`justfile`](justfile) pour automatisation et raccourci de commandes.
+- [`justfile`](justfile) pour automatisation et raccourci de commandes
 - Variables d'environnement séparées par service
+
+### 5. Infrastructure de Production
+
+- **Containers Docker optimisés** : Images Ubuntu 24.04 avec builds multi-stage
+- **Agent** : uv pour gestion rapide des dépendances Python
+- **Frontend** : Build Bun.js avec cache optimisé et image sans le code source
+- **Configuration avancée** : Validation Zod et gestion d'environnement dynamique
 
 ## Points d'Extension
 
@@ -172,3 +188,9 @@ Les outils sont organisés en 6 catégories :
 - Créer nouveaux thèmes dans [`src/themes/`](front/src/themes/)
 - Étendre composants dans [`src/app/components/`](front/src/app/components/)
 - Personnaliser visualiseurs audio
+
+### 4. Déploiement Production
+
+- Utiliser les Dockerfiles optimisés dans [`docker/prod/`](docker/prod/)
+- Configurer les variables d'environnement par environnement
+- Build avec `just prod-build-agent [tag]` et `just prod-build-front [tag]`
