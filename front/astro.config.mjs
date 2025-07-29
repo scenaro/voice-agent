@@ -65,6 +65,6 @@ export default defineConfig({
   },
   server: {
     host: true,//process.env.DEV, // only in dev mode
-    allowedHosts: ["localhost", "127.0.0.1", "0.0.0.0", "tnicolasgo4321.share.zrok.io"],
+    allowedHosts: ["localhost", "127.0.0.1", "0.0.0.0", "scenaro-voice-agent-4321.share.zrok.io"],
   },
 });
