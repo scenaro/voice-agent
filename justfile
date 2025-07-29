@@ -34,10 +34,20 @@ setup:
   cp front/.env.example front/.env
   @echo "📝 Éditez agent/.env avec vos clés API:"
 
-
 # Clean build artifacts and dependencies
 clean:
   @echo "🧹 Nettoyage..."
-  cd front && rm -rf .next node_modules dist
+  cd front && rm -rf .astro node_modules dist
   cd agent && rm -rf .venv __pycache__ *.pyc
+
+
+# Build agent Docker image for production
+prod-build-agent tag="latest":
+  @echo "🐳 Building agent production image with tag: {{tag}}"
+  docker build -f docker/prod/agent.Dockerfile -t scenaro-voice-agent:{{tag}} .
+
+# Build frontend Docker image for production
+prod-build-front tag="latest":
+  @echo "🐳 Building frontend production image with tag: {{tag}}"
+  docker build -f docker/prod/front.Dockerfile -t scenaro-voice-front:{{tag}} .
 

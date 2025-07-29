@@ -7,7 +7,7 @@
 - agent/ : Backend Python
 - front/ : Frontend Next.js (basé sur un boilerplate LiveKit trouvé dans leurs dépôts)
 - Docker : Docker compose pour l'environnement de développement
-- justfile : (optionnel) Fichier de commandes pour l'environnement de développement
+- justfile : (optionnel) Fichier de commandes.
 
 ## Installation et Configuration
 
@@ -60,6 +60,20 @@ bun dev
 ```
 
 L'interface web sera disponible sur : <http://localhost:3000>
+
+## Production
+
+### Build containers
+
+```bash
+# Build avec tag par défaut (latest)
+just prod-build-agent
+just prod-build-front
+
+# Build avec tag personnalisé
+just prod-build-agent v1.0.0
+just prod-build-front v1.0.0
+```
 
 ## Dépannage
 
