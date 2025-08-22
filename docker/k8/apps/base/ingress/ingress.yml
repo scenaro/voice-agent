@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: voice-agent-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - voice-agent.scenaro.io
+    secretName: voice-agent-tls  # Géré par cert-manager
+  rules:
+  - host: voice-agent.scenaro.io
+    http:
+      paths:
+      - path: /api/token
+        pathType: Prefix
+        backend:
+          service:
+            name: front-service
+            port:
+              number: 4321
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: agent-service
+            port:
+              number: 7880
+      - path: /api/sys/status
+        pathType: Prefix
+        backend:
+          service:
+            name: agent-service
+            port:
+              number: 8080
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: front-service
+            port:
+              number: 4321

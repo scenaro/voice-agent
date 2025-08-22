@@ -2,7 +2,7 @@
 ARG UBUNTU_VERSION=24.04
 
 # Build stage
-FROM --platform=${BUILDPLATFORM:-linux/amd64} ubuntu:${UBUNTU_VERSION} AS builder
+FROM --platform=linux/amd64 ubuntu:${UBUNTU_VERSION} AS builder
 
 # For tzdata and other interactive shell
 ARG DEBIAN_FRONTEND=noninteractive
@@ -45,10 +45,10 @@ RUN bun install --frozen-lockfile
 COPY --chown=app:app front/ ./
 
 # Build for production
-RUN bun run build
+# RUN bun run build
 
 # Production stage - lighter image
-FROM --platform=${BUILDPLATFORM:-linux/amd64} ubuntu:${UBUNTU_VERSION} AS production
+FROM --platform=linux/amd64 ubuntu:${UBUNTU_VERSION} AS production
 
 ARG DEBIAN_FRONTEND=noninteractive
 # hadolint ignore=SecretsUsedInArgOrEnv
@@ -75,9 +75,11 @@ WORKDIR /app
 # Set working directory
 # Copy only the built dist folder with package.json
 COPY --from=builder --chown=app:app /app/package.json /app/bun.lock ./
+COPY --from=builder --chown=app:app /app/node_modules /app/node_modules/
 COPY --from=builder --chown=app:app /app/dist ./dist/
 
-RUN bun install --frozen-lockfile
+# RUN bun install --frozen-lockfile
+RUN bun install
 
 # Environment variables
 ENV NODE_ENV=production
@@ -86,4 +88,6 @@ ENV NODE_ENV=production
 EXPOSE 4321
 
 # Production command - run the built server
-CMD ["bun", "run", "serve"]
+# CMD ["bun", "run", "serve"]
+CMD ["/home/app/.bun/bin/bun", "run", "serve"]
+# CMD ["/bin/sh", "-c", "bash"]

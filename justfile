@@ -1,5 +1,7 @@
 set dotenv-load := false
 
+import "./docker/k8/scripts/recipes/index.just"
+
 # Lists recipes
 default:
   @just --list --unsorted
@@ -42,12 +44,19 @@ clean:
 
 
 # Build agent Docker image for production
-prod-build-agent tag="latest":
+local-build-prod-agent tag="latest":
   @echo "🐳 Building agent production image with tag: {{tag}}"
   docker build -f docker/prod/agent.Dockerfile -t scenaro-voice-agent:{{tag}} .
 
 # Build frontend Docker image for production
-prod-build-front tag="latest":
+local-build-prod-front tag="latest":
   @echo "🐳 Building frontend production image with tag: {{tag}}"
   docker build -f docker/prod/front.Dockerfile -t scenaro-voice-front:{{tag}} .
+
+
+# =============================================================================
+# Kubernetes Commands
+# =============================================================================
+
+
 

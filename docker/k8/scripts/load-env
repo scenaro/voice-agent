@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# =============================================================================
+# Script pour charger les variables d'environnement Kubernetes
+# =============================================================================
+#
+# IMPORTANT: Ce script doit être sourcé, pas exécuté !
+#
+# Usage:
+#   source ./load-env staging
+#   . ./load-env prod
+#
+# Ce script charge les variables d'environnement depuis le fichier
+# .env.k8s.<environment> correspondant et les exporte dans le shell courant.
+#
+
+# Note: on évite 'set -e' car quand sourcé, cela pourrait fermer le shell parent
+
+# Couleurs pour l'affichage
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Fonction d'affichage des erreurs
+error() {
+    echo -e "${RED}Erreur: $1${NC}" >&2
+}
+
+# Fonction d'affichage des informations
+info() {
+    echo -e "${GREEN}$1${NC}"
+}
+
+# Vérifier si le script est sourcé (recommandé) ou exécuté
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    error "Ce script doit être sourcé, pas exécuté !"
+    echo "Usage: source $0 <environment>"
+    echo "   ou: . $0 <environment>"
+    echo "Exemple: source $0 staging"
+    echo "         . $0 prod"
+    return 1 2>/dev/null || exit 1
+fi
+
+# Vérifier qu'un argument est fourni
+if [ $# -eq 0 ]; then
+    error "Aucun environnement spécifié."
+    echo "Usage: source $0 <environment>"
+    echo "Exemple: source $0 staging"
+    echo "         . $0 prod"
+    return 1
+fi
+
+# Récupérer l'environnement demandé
+ENV="$1"
+
+# Déterminer le répertoire du script et le répertoire de configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$SCRIPT_DIR/docker/k8/config"
+
+# Construire le chemin du fichier .env.k8s
+ENV_FILE="$CONFIG_DIR/.env.k8s.$ENV"
+
+# Vérifier que le fichier existe
+if [ ! -f "$ENV_FILE" ]; then
+    error "Le fichier de configuration '$ENV_FILE' n'existe pas."
+    echo ""
+    echo "Fichiers de configuration disponibles:"
+    if ls "$CONFIG_DIR"/.env.k8s.* >/dev/null 2>&1; then
+        ls -1 "$CONFIG_DIR"/.env.k8s.* | sed 's|.*/\.env\.k8s\.||' | sed 's/^/  - /'
+    else
+        echo "  Aucun fichier de configuration trouvé."
+    fi
+    return 1
+fi
+
+# Vérifier que le fichier est lisible
+if [ ! -r "$ENV_FILE" ]; then
+    error "Le fichier '$ENV_FILE' n'est pas lisible."
+    return 1
+fi
+
+# Charger les variables d'environnement
+info "📁 Chargement des variables d'environnement depuis: $ENV_FILE"
+
+# Compter le nombre de variables à charger (exclure commentaires et lignes vides)
+VAR_COUNT=$(grep -c '^[^#]*=' "$ENV_FILE" 2>/dev/null || echo "0")
+
+# Exporter les variables (même méthode que check-env.sh)
+export $(cat "$ENV_FILE" | grep -v "^#" | xargs) 2>/dev/null
+
+info "✅ Environnement '$ENV' chargé avec succès ($VAR_COUNT variables)."
+
+# Afficher un résumé des variables principales (sans les valeurs pour la sécurité)
+if [ "$VAR_COUNT" -gt 0 ]; then
+    echo ""
+    echo "Variables principales chargées:"
+    grep '^[^#]*=' "$ENV_FILE" | cut -d'=' -f1 | sed 's/^/  - /' | head -10
+    if [ "$VAR_COUNT" -gt 10 ]; then
+        echo "  ... et $((VAR_COUNT - 10)) autres variables"
+    fi
+fi
+
+echo ""
+info "💡 Variables exportées dans le shell courant."
+info "🔍 Vérifiez avec: env | grep -E \"K8_|SCW_|CLUSTER_|REGISTRY_\""
+info "📋 Ou utilisez: ./check-env $ENV"

@@ -1,0 +1,139 @@
+# Traefik Configuration pour Scaleway Kubernetes avec cert-manager
+# Chart officiel : https://github.com/traefik/traefik-helm-chart
+
+# Configuration du déploiement - CORRIGÉ
+deployment:
+  kind: Deployment  # Changé de DaemonSet pour cohérence avec replicas
+  replicas: 2
+
+# Configuration du service - INCHANGÉ
+service:
+  type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/scw-loadbalancer-ip-ids: "357aed1f-76c3-438b-b27e-4e73fc2ca1cf" # 51.158.68.116
+    service.beta.kubernetes.io/scw-loadbalancer-type: "LB-GP-M"
+    service.beta.kubernetes.io/scw-loadbalancer-use-hostname: "true"
+    service.beta.kubernetes.io/scw-loadbalancer-forward-port-algorithm: "leastconn"
+
+# Configuration des ports - INCHANGÉ
+ports:
+  web:
+    port: 80
+    expose:
+      default: true
+    exposedPort: 80
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
+  websecure:
+    port: 443
+    expose:
+      default: true
+    exposedPort: 443
+    tls:
+      enabled: true
+
+# Dashboard Traefik - SÉCURISÉ pour tunnel SSH uniquement
+ingressRoute:
+  dashboard:
+    enabled: false  # Désactivé pour accès public, utilisable via tunnel SSH
+
+# Configuration de persistance - SIMPLIFIÉE (plus besoin d'ACME)
+persistence:
+  enabled: false  # Plus nécessaire sans ACME
+
+# Arguments additionnels - redirection HTTPS temporairement désactivée
+additionalArguments:
+  - "--api.dashboard=true"
+  - "--api.insecure=false"
+  - "--log.level=INFO"
+  - "--accesslog=true"
+  - "--metrics.prometheus=true"
+
+# Ressources
+resources:
+  requests:
+    cpu: 100m
+    memory: 50Mi
+  limits:
+    cpu: 300m
+    memory: 150Mi
+
+# Contexte de sécurité
+securityContext:
+  runAsNonRoot: false
+  runAsUser: 0
+  runAsGroup: 0
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
+
+# RBAC
+rbac:
+  enabled: true
+
+# Métriques Prometheus
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addServicesLabels: true
+    buckets: "0.1,0.3,1.2,5.0"
+
+# Health checks
+ping:
+  entryPoint: traefik
+
+# Sélecteur de nœuds
+nodeSelector:
+  kubernetes.io/os: linux
+
+# Affinité pour haute disponibilité
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - traefik
+        topologyKey: kubernetes.io/hostname
+
+# AJOUT: Objets supplémentaires pour authentification dashboard et middlewares
+extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: traefik-dashboard-auth-secret
+    type: kubernetes.io/basic-auth
+    stringData:
+      username: admin
+      password: changeme  # À changer en production
+
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-dashboard-auth
+    spec:
+      basicAuth:
+        secret: traefik-dashboard-auth-secret
+
+  # Middleware de redirection HTTPS
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: redirect-https
+    spec:
+      redirectScheme:
+        scheme: https
+        permanent: true

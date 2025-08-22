@@ -1,0 +1,35 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    # URL du serveur ACME Let's Encrypt
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@scenaro.io
+    # Nom du secret où sera stockée la clé privée ACME
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    # Configuration du challenge HTTP-01
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
+      selector: {}
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # URL du serveur ACME Let's Encrypt (staging pour les tests)
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: admin@scenaro.io
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
+      selector: {}

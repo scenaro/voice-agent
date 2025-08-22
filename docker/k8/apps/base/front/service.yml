@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-service
+  labels:
+    app: front
+    component: web
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4321
+    targetPort: 4321
+    protocol: TCP
+    name: http
+  selector:
+    app: front

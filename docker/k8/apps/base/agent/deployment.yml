@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent
+  labels:
+    app: agent
+    component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent
+  template:
+    metadata:
+      labels:
+        app: agent
+        component: backend
+    spec:
+      terminationGracePeriodSeconds: 600
+      containers:
+      - name: agent
+        image: scenaro-voice-agent
+        ports:
+        - name: livekit
+          containerPort: 7880
+          protocol: TCP
+        - name: health
+          containerPort: 8080
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: shared-config
+        - configMapRef:
+            name: agent-config
+        - secretRef:
+            name: shared-secrets
+        - secretRef:
+            name: agent-secrets
+        # Variables d'environnement via envFrom seulement
+        resources:
+          requests:
+            cpu: 1500m
+            memory: 6Gi
+          limits:
+            cpu: 1500m
+            memory: 8Gi
+        # FIXME: health doesn't work
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 8080
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 10
+        # readinessProbe:
+        #   httpGet:
+        #     path: /ready
+        #     port: 8080
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+      securityContext:
+        fsGroup: 1001

@@ -1,0 +1,25 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: voice-agent-tls
+  namespace: scenaro-voice-agent
+spec:
+  secretName: voice-agent-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - voice-agent.scenaro.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: traefik-dashboard-tls
+  namespace: scenaro-voice-agent
+spec:
+  secretName: traefik-dashboard-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - traefik.voice-agent.scenaro.io

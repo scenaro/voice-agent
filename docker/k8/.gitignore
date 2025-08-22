@@ -1,0 +1,7 @@
+# Environment variables (K8s)
+.env.k8s.*
+!.env.k8s.*.example
+
+# Config Secret and ConfigMap (K8s)
+*-secret-config-patch.yml
+kubeconfig-*.yml

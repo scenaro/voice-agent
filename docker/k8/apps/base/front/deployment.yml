@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  labels:
+    app: front
+    component: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+        component: web
+    spec:
+      containers:
+      - name: front
+        image: scenaro-voice-front
+        ports:
+        - name: http
+          containerPort: 4321
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: shared-config
+        - configMapRef:
+            name: front-config
+        - secretRef:
+            name: shared-secrets
+        # Variables d'environnement via envFrom seulement
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 4321
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 4321
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+      securityContext:
+        fsGroup: 1001

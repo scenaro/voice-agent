@@ -13,4 +13,5 @@ dependencies = [
     "livekit-plugins-turn-detector",
     "python-dotenv",
     "requests",
+    "sanic",
 ]

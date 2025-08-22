@@ -3,7 +3,7 @@
 # ARG UBUNTU_VERSION=noble-20250127
 ARG UBUNTU_VERSION=24.04
 
-FROM --platform=${BUILDPLATFORM:-linux/amd64} ubuntu:${UBUNTU_VERSION}
+FROM --platform=linux/amd64 ubuntu:${UBUNTU_VERSION}
 
 # For tzdata and other interactive shell
 ARG DEBIAN_FRONTEND=noninteractive
@@ -37,14 +37,24 @@ WORKDIR /app
 
 # Copy Python configuration files
 # Optimize layers and build cache (faster builds)
-COPY --chown=app:app agent/pyproject.toml ./
-COPY --chown=app:app agent/uv.lock ./
+# COPY  --from=builder --chown=app:app agent/pyproject.toml ./
+# COPY  --from=builder --chown=app:app agent/uv.lock ./
+
+# # Install Python dependencies
+# RUN uv sync --locked
+
+# # Copy application code
+# COPY  --from=builder --chown=app:app agent/ ./
+
+#---
+COPY  --chown=app:app agent/pyproject.toml ./
+COPY  --chown=app:app agent/uv.lock ./
 
 # Install Python dependencies
 RUN uv sync --locked
 
 # Copy application code
-COPY --chown=app:app agent/ ./
+COPY  --chown=app:app agent/ ./
 
 # Environment variables
 ENV PYTHONPATH=/app
@@ -53,5 +63,5 @@ ENV PYTHONUNBUFFERED=1
 # Expose port
 EXPOSE 7880
 
-# Default command
-CMD ["uv", "run", "main.py"]
+# Default command (ensure execution permissions)
+CMD ["/home/app/.local/bin/uv", "run", "main.py", "start"]

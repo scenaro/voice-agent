@@ -1,0 +1,28 @@
+# Variables partagées entre agent et front
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shared-config
+data:
+  LIVEKIT_URL: "${LIVEKIT_URL}"
+
+---
+# Variables spécifiques à l'agent
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agent-config
+data:
+  ENV_MODE: "${ENV_MODE}"
+  LOG_LEVEL: "${LOG_LEVEL}"
+  METRICS_ENABLED: "${METRICS_ENABLED}"
+
+---
+# Variables spécifiques au front
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: front-config
+data:
+  NODE_ENV: "${NODE_ENV}"
+  CACHE_ENABLED: "${CACHE_ENABLED}"

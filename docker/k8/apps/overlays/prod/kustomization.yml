@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: scenaro-voice-agent-prod
+
+namespace: scenaro-voice-agent
+
+resources:
+  - ../../base
+
+patches:
+  - path: ./patches/prod-secret-config-patch.yml
+
+images:
+  - name: scenaro-voice-agent # match images with this name
+    newName: rg.fr-par.scw.cloud/scenaro/voice-agent
+    newTag: latest
+  - name: scenaro-voice-front # match images with this name
+    newName: rg.fr-par.scw.cloud/scenaro/voice-front
+    newTag: latest
+
+labels:
+  - pairs:
+      environment: production
+
+replicas:
+  - name: agent
+    count: 1
+  - name: front
+    count: 1

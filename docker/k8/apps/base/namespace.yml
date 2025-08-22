@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: scenaro-voice-agent
+  labels:
+    name: scenaro-voice-agent
+    app.kubernetes.io/name: scenaro-voice-agent

@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: scenaro-voice-agent
+
+namespace: scenaro-voice-agent
+
+resources:
+  - namespace.yml
+  - agent/deployment.yml
+  - agent/service.yml
+  - front/deployment.yml
+  - front/service.yml
+  - ingress/ingress.yml
+  - configmap.yml
+  - secrets.yml
+
+# Fichiers de patchs
+# patchesStrategicMerge:
+
+labels:
+- includeSelectors: true
+  includeTemplates: true
+  pairs:
+    app.kubernetes.io/name: scenaro-voice-agent
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/part-of: scenaro-voice-agent
