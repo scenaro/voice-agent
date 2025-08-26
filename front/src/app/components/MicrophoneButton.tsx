@@ -53,6 +53,11 @@ export function MicrophoneButton({ localMultibandVolume }: MicrophoneButtonProps
     );
   }, [isMicrophoneEnabled, localMultibandVolume]);
 
+  // Mémorise le DeviceSelector séparément pour éviter les re-renders
+  const deviceSelector = useMemo(() => {
+    return <DeviceSelector kind="audioinput" />;
+  }, []); // Pas de dépendances = ne re-render que si le composant parent le force
+
   return (
     <div id="sc-microphone-button-content">
       <Button
@@ -64,7 +69,7 @@ export function MicrophoneButton({ localMultibandVolume }: MicrophoneButtonProps
         {isMicrophoneEnabled ? <MicrophoneOnSVG /> : <MicrophoneOffSVG />}
         {microphoneVolumeIndicator}
       </Button>
-      <DeviceSelector kind="audioinput" />
+      {deviceSelector}
     </div>
   );
 }
@@ -74,7 +79,7 @@ export function MicrophoneButton({ localMultibandVolume }: MicrophoneButtonProps
 const handleToggleMicrophone = async (localParticipant: any, isMicrophoneEnabled: boolean) => {
   try {
     await localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
-  } catch (err : any) {
+  } catch (err: any) {
     // Affichez un retour utilisateur et, si pertinent, logguez l'erreur.
     if (err && err.name === "NotAllowedError") {
       alert(

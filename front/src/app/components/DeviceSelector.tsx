@@ -53,7 +53,7 @@ export function DeviceSelector({ kind }: DeviceSelectorProps) {
         ))}
         {devices.length === 0 && (
           <div className="sc-device-selector-item">
-            Aucun device disponible
+            Aucun périphérique (micro) détecté
           </div>
         )}
       </div>

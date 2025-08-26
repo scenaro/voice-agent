@@ -22,7 +22,7 @@ import SimpleAudioIndicator from "./SimpleAudioIndicator";
 
 const headerHeight = 56;
 
-export default function Agent({ title, logo, onConnect } : AgentProps) {
+export default function Agent({ title, logo, onConnect }: AgentProps) {
   const { localParticipant } = useLocalParticipant();
 
   const {
@@ -44,8 +44,8 @@ export default function Agent({ title, logo, onConnect } : AgentProps) {
 
   // Listen for data channel messages (tools)
   useDataChannel((msg: ReceivedDataMessage) => {
-     const decoded = new TextDecoder("utf-8").decode(msg.payload);
-     try {
+    const decoded = new TextDecoder("utf-8").decode(msg.payload);
+    try {
       if (msg.topic?.startsWith("tool:")) {
         console.log("useDataChannel data - tool :", msg.topic, decoded);
         const data = JSON.parse(decoded);
@@ -74,7 +74,7 @@ export default function Agent({ title, logo, onConnect } : AgentProps) {
       roomState === ConnectionState.Connecting ||
       (!agentAudioTrack && roomState === ConnectionState.Connected);
 
-      // conversation toolbar
+    // conversation toolbar
     const convToolbar = (
       <div id="sc-agent-audio-track-toolbar">
         <div id="sc-agent-audio-track-toolbar-content">
@@ -143,7 +143,6 @@ export default function Agent({ title, logo, onConnect } : AgentProps) {
 
     return visualizerContent;
   }, [
-    localMultibandVolume,
     roomState,
     agentAudioTrack,
     onConnect,
