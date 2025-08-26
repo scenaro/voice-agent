@@ -1,6 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
+from typing import List
 
 from cognition.utils import format_tool_result
 from livekit import agents
@@ -11,15 +12,21 @@ from livekit.agents import (
 
 
 async def data_bucket_cart_remove(
-    ctx: agents.JobContext, context: RunContext, id: str
+    ctx: agents.JobContext, context: RunContext, product_ids: List[str]
 ) -> str:
-    """Supprimer un vin du panier."""
+    """Supprimer un ou plusieurs vins du panier."""
     print("🔧 Exécution du tool: data_bucket_cart_remove")
-    print(json.dumps({"id": id}, indent=2, ensure_ascii=False))
+    print(json.dumps({"product_ids": product_ids}, indent=2, ensure_ascii=False))
 
     session_dir = Path(__file__).parent.parent
 
-    context.session.say("D'accord, je retire ce vin de votre panier.")
+    # Adapter le message selon le nombre de produits
+    if len(product_ids) == 1:
+        context.session.say("D'accord, je retire ce vin de votre panier.")
+    else:
+        context.session.say(
+            f"D'accord, je retire ces {len(product_ids)} vins de votre panier."
+        )
 
     # Send a verbal status update to the user after a short delay
     # async def _speak_status_update(delay: float = 0.5):
@@ -35,7 +42,7 @@ async def data_bucket_cart_remove(
     #     print(f"Erreur lors du chargement des réponses: {e}")
     #     raise ToolError("Désolé, je n'ai pas pu retirer le vin de votre panier.")
 
-    tool_result = {"data": {"id": id}}
+    tool_result = {"data": product_ids}
     print("📤 Réponse du tool data_bucket_cart_remove:")
     print(f"   {json.dumps(tool_result, indent=2, ensure_ascii=False)}")
 

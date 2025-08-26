@@ -1,6 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
+from typing import List
 
 from cognition.utils import format_tool_result
 from livekit import agents
@@ -11,15 +12,30 @@ from livekit.agents import (
 
 
 async def data_bucket_cart_replace(
-    ctx: agents.JobContext, context: RunContext, id: str, newId: str
+    ctx: agents.JobContext,
+    context: RunContext,
+    product_ids: List[str],
+    new_product_ids: List[str],
 ) -> str:
-    """Remplacer un vin du panier."""
+    """Remplacer un ou plusieurs vins du panier."""
     print("🔧 Exécution du tool: data_bucket_cart_replace")
-    print(json.dumps({"id": id, "newId": newId}, indent=2, ensure_ascii=False))
+    print(
+        json.dumps(
+            {"product_ids": product_ids, "new_product_ids": new_product_ids},
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
 
     session_dir = Path(__file__).parent.parent
 
-    context.session.say("Parfait, je remplace ce vin dans votre panier.")
+    # Adapter le message selon le nombre de produits
+    if len(product_ids) == 1:
+        context.session.say("Parfait, je remplace ce vin dans votre panier.")
+    else:
+        context.session.say(
+            f"Parfait, je remplace ces {len(product_ids)} vins dans votre panier."
+        )
 
     # Send a verbal status update to the user after a short delay
     # async def _speak_status_update(delay: float = 0.5):
@@ -35,7 +51,9 @@ async def data_bucket_cart_replace(
     #     print(f"Erreur lors du chargement des réponses: {e}")
     #     raise ToolError("Désolé, je n'ai pas pu remplacer le vin dans votre panier.")
 
-    tool_result = {"data": {"id": id, "newId": newId}}
+    tool_result = {
+        "data": {"product_ids": product_ids, "new_product_ids": new_product_ids}
+    }
     print("📤 Réponse du tool data_bucket_cart_replace:")
     print(f"   {json.dumps(tool_result, indent=2, ensure_ascii=False)}")
 

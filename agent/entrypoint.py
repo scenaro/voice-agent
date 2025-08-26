@@ -80,7 +80,7 @@ async def entrypoint(ctx: agents.JobContext):
         for _ in range(3):
             await session.generate_reply(
                 instructions=(
-                    "L'utilisateur est inactif. Vérifiez poliment si l'utilisateur est toujours présent."
+                    "L'utilisateur est inactif. Vérifiez poliment si l'utilisateur est toujours présent (ne répète pas cette phrase, génère en une appropriée réponse)."
                 )
             )
             await asyncio.sleep(20)

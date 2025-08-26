@@ -14,25 +14,44 @@ export default function Cart() {
   useEffect(() => {
     if (dataAdd) {
       console.log("data_bucket_cart_add - data received:", dataAdd);
-      setCount(count + 1);
-      setCart([...cart, dataAdd.id]);
+      // dataAdd contient maintenant directement un array de product_ids
+      const newItems = Array.isArray(dataAdd) ? dataAdd : [];
+      setCart([...cart, ...newItems]);
+      setCount(cart.length + newItems.length);
     }
   }, [dataAdd]);
 
   useEffect(() => {
     if (dataRemove) {
       console.log("data_bucket_cart_remove - data received:", dataRemove);
-      setCount(count - 1);
-      setCart(rmItem([...cart], dataRemove.id));
+      // dataRemove contient maintenant directement un array de product_ids
+      const itemsToRemove: string[] = Array.isArray(dataRemove) ? dataRemove : [];
+      let newCart = [...cart];
+      itemsToRemove.forEach((id: string) => {
+        newCart = rmItem(newCart, id);
+      });
+      setCart(newCart);
+      setCount(newCart.length);
     }
   }, [dataRemove]);
 
   useEffect(() => {
     if (dataReplace) {
       console.log("data_bucket_cart_replace - data received:", dataReplace);
-      setCart(cart.slice(cart.indexOf(dataReplace.id), 1));
-      setCart(rmItem([...cart], dataReplace.newId));
-      setCount(cart.length);
+      // dataReplace contient maintenant {product_ids: [...], new_product_ids: [...]}
+      const oldIds: string[] = dataReplace.product_ids || [];
+      const newIds: string[] = dataReplace.new_product_ids || [];
+
+      let newCart = [...cart];
+      // Supprimer les anciens IDs
+      oldIds.forEach((id: string) => {
+        newCart = rmItem(newCart, id);
+      });
+      // Ajouter les nouveaux IDs
+      newCart = [...newCart, ...newIds];
+
+      setCart(newCart);
+      setCount(newCart.length);
     }
   }, [dataReplace]);
 

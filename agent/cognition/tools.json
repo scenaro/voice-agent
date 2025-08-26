@@ -688,17 +688,20 @@
   },
   {
     "data_bucket_cart_remove": {
-      "description": "Supprimer un vin du panier",
+      "description": "Supprimer un ou plusieurs vins du panier",
       "parameters": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "L'identifiant du vin à supprimer"
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste des identifiants des produits à supprimer du panier"
           }
         },
         "required": [
-          "id"
+          "product_ids"
         ]
       },
       "returns": {
@@ -726,21 +729,28 @@
   },
   {
     "data_bucket_cart_replace": {
-      "description": "Remplacer un vin du panier",
+      "description": "Remplacer un ou plusieurs vins du panier",
       "parameters": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "L'identifiant du vin à remplacer"
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste des identifiants des produits à remplacer"
           },
-          "newId": {
-            "type": "string",
-            "description": "L'identifiant du nouveau vin"
+          "new_product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste des identifiants des nouveaux produits"
           }
         },
         "required": [
-          "id"
+          "product_ids",
+          "new_product_ids"
         ]
       },
       "returns": {
