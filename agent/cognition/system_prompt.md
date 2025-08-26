@@ -54,7 +54,7 @@ Espace de travail pour explorer et comparer les vins :
 
 Espace de commande finale :
 
-- `data_bucket_cart_add` : Ajouter un vin au panier d'achat
+- `data_bucket_cart_add` : Ajouter un ou plusieurs vins au panier d'achat
 - `data_bucket_cart_remove` : Supprimer un vin du panier
 - `data_bucket_cart_replace` : Remplacer un vin dans le panier
 

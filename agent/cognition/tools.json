@@ -647,17 +647,20 @@
   },
   {
     "data_bucket_cart_add": {
-      "description": "Ajouter un vin au panier",
+      "description": "Ajouter un ou plusieurs vins au panier",
       "parameters": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "L'identifiant du vin à ajouter"
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste des identifiants des produits à ajouter au panier"
           }
         },
         "required": [
-          "id"
+          "product_ids"
         ]
       },
       "returns": {

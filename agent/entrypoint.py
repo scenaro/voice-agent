@@ -1,10 +1,13 @@
 import asyncio
 from datetime import datetime
+import logging
 
 from cognition.chat_session.chat_session_livekit import ChatSessionLiveKitAgent
 from livekit import agents
 from livekit.agents import (
+    NOT_GIVEN,
     AgentSession,
+    AgentFalseInterruptionEvent,
     ConversationItemAddedEvent,
     UserStateChangedEvent,
     metrics,
@@ -18,6 +21,8 @@ from livekit.plugins import (
     openai,
     silero,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def prewarm(proc):
@@ -60,6 +65,13 @@ async def entrypoint(ctx: agents.JobContext):
         )
 
     # ---------------------------------------------------------------------------
+
+    # sometimes background noise could interrupt the agent session, these are considered false positive interruptions
+    # when it's detected, you may resume the agent's speech
+    @session.on("agent_false_interruption")
+    def _on_agent_false_interruption(ev: AgentFalseInterruptionEvent):
+        logger.info("false positive interruption, resuming")
+        session.generate_reply(instructions=ev.extra_instructions or NOT_GIVEN)
 
     inactivity_task: asyncio.Task | None = None
 

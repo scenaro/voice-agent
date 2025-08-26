@@ -11,6 +11,8 @@ from cognition.utils import load_function_tools
 
 # Classe de l'agent principal
 class ChatSessionLiveKitAgent(Agent):
+    print("🚀 Loading ChatSessionLiveKitAgent...")
+
     def __init__(
         self,
         ctx: agents.JobContext,

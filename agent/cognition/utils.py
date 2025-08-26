@@ -1,12 +1,16 @@
 # Fonction utilitaire pour formater les réponses des tools
-import json
 import importlib
+import json
+import logging
+import sys
+
 from pathlib import Path
 from typing import Any, Dict
-from warnings import deprecated
+
 from livekit import agents
 from livekit.agents import function_tool
 
+logger = logging.getLogger(__name__)
 
 # Configuration des outils avec leurs métadonnées
 tools_def = {
@@ -28,32 +32,7 @@ tools_def = {
     "session_memory_update": {"publish_data": False},
 }
 
-
-# @deprecated("Use format_tool_result instead")
-# # Deprecated, must be removed
-# def format_tool_response(tool_result: Dict[str, Any], tool_name: str) -> str:
-#     """
-#     Formate la réponse d'un tool avec les données (si disponibles) et le prompt.
-
-#     Args:
-#         tool_result: Le résultat du tool depuis responses.json
-#         tool_name: Le nom du tool pour le message
-
-#     Returns:
-#         str: La réponse formatée avec données + prompt
-#     """
-#     response_parts = []
-
-#     # Ajouter les données si elles existent
-#     if "data" in tool_result and tool_result["data"]:
-#         response_parts.append(json.dumps(tool_result["data"], ensure_ascii=False))
-#         response_parts.append("")  # Ligne vide pour séparer
-
-#     # Ajouter le prompt/instructions
-#     prompt = tool_result.get("prompt", f"Tool {tool_name} exécuté avec succès.")
-#     response_parts.append(prompt)
-
-#     return "\n".join(response_parts)
+("Use format_tool_result instead")
 
 
 def format_tool_result(tool_result: Dict[str, Any], tool_name: str) -> str:
@@ -85,7 +64,9 @@ def handle_tool(fn, ctx: agents.JobContext, publish_data=False):
         result = await fn(ctx, *args, **kwargs)
 
         if publish_data:
-            print(f"📤 Envoi de la réponse au topic: tool:{fn.__name__} => {result}")
+            logger.info(
+                f"📤 Envoi de la réponse au topic: tool:{fn.__name__} => {result}"
+            )
             await ctx.room.local_participant.publish_data(
                 # FIXME: standardize data format
                 json.dumps(result.get("data", result)).encode("utf-8"),
@@ -124,17 +105,25 @@ def load_function_tools(ctx: agents.JobContext):
         with open(Path(__file__).parent / "tools.json", "r", encoding="utf-8") as f:
             tools_config = json.load(f)
     except Exception as e:
-        print(f"❌ Erreur lors du chargement de tools.json: {e}")
+        logger.error(f"❌ Erreur lors du chargement de tools.json: {e}")
+        print(
+            f"❌ Erreur lors du chargement de tools.json: {e}",
+            flush=True,
+            file=sys.stderr,
+        )
         return []
 
-    print(f"📋 Chargement de {len(tools_config)} outils depuis tools.json...")
+    logger.info(f"📋 Chargement de {len(tools_config)} outils depuis tools.json...")
+    print(
+        f"📋 Chargement de {len(tools_config)} outils depuis tools.json...", flush=True
+    )
 
     for tool_def in tools_config:
         tool_name = list(tool_def.keys())[0]
 
         # Vérifier que l'outil est dans tools_def
         if tool_name not in tools_def:
-            print(
+            logger.warning(
                 f"⚠️ Outil {tool_name} trouvé dans tools.json mais pas dans tools_def - ignoré"
             )
             continue
@@ -150,13 +139,18 @@ def load_function_tools(ctx: agents.JobContext):
 
             # Appliquer handle_tool
             tools.append(handle_tool(tool_function, ctx, publish_data=publish_data))
-            print(f"✅ Outil {tool_name} chargé (publish_data={publish_data})")
+            logger.info(f"✅ Outil {tool_name} chargé (publish_data={publish_data})")
+            print(
+                f"✅ Outil {tool_name} chargé (publish_data={publish_data})", flush=True
+            )
 
         except Exception as e:
-            print(f"❌ Erreur lors du chargement de {tool_name}: {e}")
+            logger.error(f"❌ Erreur lors du chargement de {tool_name}: {e}")
             continue
 
-    print(f"🎯 {len(tools)} outils chargés avec succès")
+    logger.info(f"🎯 {len(tools)} outils chargés avec succès")
+    print(f"🎯 {len(tools)} outils chargés avec succès", flush=True)
+
     return tools
 
 

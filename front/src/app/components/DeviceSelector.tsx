@@ -16,15 +16,15 @@ export function DeviceSelector({ kind }: DeviceSelectorProps) {
       console.error("DeviceSelector error:", e);
     }
   });
-  const [selectedDeviceName, setSelectedDeviceName] = useState("");
 
+  const [selectedDeviceName, setSelectedDeviceName] = useState("");
   useEffect(() => {
     deviceSelect.devices.forEach((device) => {
       if (device.deviceId === deviceSelect.activeDeviceId) {
         setSelectedDeviceName(device.label);
       }
     });
-  }, [deviceSelect.activeDeviceId, deviceSelect.devices, selectedDeviceName]);
+  }, [deviceSelect.activeDeviceId, deviceSelect.devices]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
