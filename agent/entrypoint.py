@@ -32,7 +32,7 @@ async def entrypoint(ctx: agents.JobContext):
         llm=openai.LLM(model="gpt-4o", temperature=0.7),
         tts=cartesia.TTS(
             model="sonic-2",
-            voice="0418348a-0ca2-4e90-9986-800fb8b3bbc0",  # "dde2731e-94b8-4c34-92e3-55bf167846f4",
+            voice="8699391e-891a-46ed-bfdf-2a23b1b3ff15",  # "dde2731e-94b8-4c34-92e3-55bf167846f4",
             language="fr",
             sample_rate=16000,
         ),
