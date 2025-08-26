@@ -26,7 +26,8 @@ async def feature_search_products_search(
         await asyncio.sleep(delay)
         context.session.say("Merci de patienter, je suis en train de chercher.")
 
-    status_update_task = asyncio.create_task(_speak_status_update(5))
+    # Create task (works with the cancel after below)
+    # status_update_task = asyncio.create_task(_speak_status_update(5))
 
     # await asyncio.sleep(10)  # wait for testing only
     try:
@@ -41,7 +42,7 @@ async def feature_search_products_search(
     print(f"   {json.dumps(tool_result, indent=2, ensure_ascii=False)}")
 
     # Cancel status update if search completed before timeout
-    status_update_task.cancel()
+    # status_update_task.cancel()
 
     # Utiliser la fonction utilitaire pour formater la réponse
     return format_tool_result(tool_result, "feature_search_products_search")

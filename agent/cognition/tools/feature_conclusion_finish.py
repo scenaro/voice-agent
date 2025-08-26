@@ -19,11 +19,11 @@ async def feature_conclusion_finish(ctx: agents.JobContext, context: RunContext)
     context.session.say("Très bien, je comprends que vous souhaitez réfléchir.")
 
     # Send a verbal status update to the user after a short delay
-    async def _speak_status_update(delay: float = 0.5):
-        await asyncio.sleep(delay)
-        context.session.say("Merci de patienter, je finalise notre échange.")
+    # async def _speak_status_update(delay: float = 0.5):
+    #     await asyncio.sleep(delay)
+    #     context.session.say("Merci de patienter, je finalise notre échange.")
 
-    status_update_task = asyncio.create_task(_speak_status_update(5))
+    # status_update_task = asyncio.create_task(_speak_status_update(5))
 
     try:
         with open(session_dir / "responses.json", "r", encoding="utf-8") as f:
@@ -37,7 +37,7 @@ async def feature_conclusion_finish(ctx: agents.JobContext, context: RunContext)
     print(f"   {json.dumps(tool_result, indent=2, ensure_ascii=False)}")
 
     # Cancel status update if loading completed before timeout
-    status_update_task.cancel()
+    # status_update_task.cancel()
 
     # Utiliser la nouvelle fonction utilitaire pour formater la réponse
     return format_tool_result(tool_result, "feature_conclusion_finish")

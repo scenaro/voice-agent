@@ -22,11 +22,11 @@ async def data_bucket_selection_remove(
     context.session.say("D'accord, je retire ce vin de votre sélection.")
 
     # Send a verbal status update to the user after a short delay
-    async def _speak_status_update(delay: float = 0.5):
-        await asyncio.sleep(delay)
-        context.session.say("Merci de patienter, je mets à jour votre sélection.")
+    # async def _speak_status_update(delay: float = 0.5):
+    #     await asyncio.sleep(delay)
+    #     context.session.say("Merci de patienter, je mets à jour votre sélection.")
 
-    status_update_task = asyncio.create_task(_speak_status_update(5))
+    # status_update_task = asyncio.create_task(_speak_status_update(5))
 
     try:
         with open(session_dir / "responses.json", "r", encoding="utf-8") as f:
@@ -36,11 +36,11 @@ async def data_bucket_selection_remove(
         raise ToolError("Désolé, je n'ai pas pu retirer le vin de votre sélection.")
 
     tool_result = responses.get("data_bucket_selection_remove", {})
-    print(f"📤 Réponse du tool data_bucket_selection_remove:")
+    print("📤 Réponse du tool data_bucket_selection_remove:")
     print(f"   {json.dumps(tool_result, indent=2, ensure_ascii=False)}")
 
     # Cancel status update if loading completed before timeout
-    status_update_task.cancel()
+    # status_update_task.cancel()
 
     # Utiliser la nouvelle fonction utilitaire pour formater la réponse
     return format_tool_result(tool_result, "data_bucket_selection_remove")
