@@ -16,6 +16,7 @@ spec:
         app: agent
         component: backend
     spec:
+      # Give the agent 10 minutes to finish up any ongoing conversations
       terminationGracePeriodSeconds: 600
       containers:
       - name: agent
@@ -39,24 +40,23 @@ spec:
         # Variables d'environnement via envFrom seulement
         resources:
           requests:
-            cpu: 1500m
-            memory: 6Gi
+            cpu: 1700m # 4 is minimum recommended
+            memory: 6Gi # 8Gi is minimum recommended
           limits:
-            cpu: 1500m
-            memory: 8Gi
-        # FIXME: health doesn't work
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: 8080
-        #   initialDelaySeconds: 60
-        #   periodSeconds: 10
-        # readinessProbe:
-        #   httpGet:
-        #     path: /ready
-        #     port: 8080
-        #   initialDelaySeconds: 60
-        #   periodSeconds: 5
+            cpu: 1700m # 4 is minimum recommended
+            memory: 7Gi  # 8Gi is minimum recommended
+        livenessProbe:
+          httpGet:
+            path: /api/sys/status/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/sys/status/ready
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
         securityContext:
           runAsNonRoot: true
           runAsUser: 1001

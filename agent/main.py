@@ -1,34 +1,33 @@
 # before importing livekit
 import env  # noqa: F401
 import asyncio
-
+import logging
+import threading
 
 from livekit import agents
 
 from entrypoint import entrypoint, prewarm
+from health_server import start_health_server, set_ready
 
 
-async def app_entrypoint(ctx):
-    import logging
-    from health_server import start_health_server, set_ready
-
-    logger = logging.getLogger(__name__)
-
-    logger.info("Starting health server before main entrypoint...")
-
-    try:
-        # Lancer health server sans bloquer la boucle principale
-        asyncio.create_task(start_health_server(port=8080))
-        set_ready(True)
-        logger.info("Health server marked as ready")
-    except Exception as e:
-        logger.error(f"Failed to start health server: {e}")
-
-    logger.info("Starting main entrypoint...")
-    await entrypoint(ctx)
+def start_health_server_thread():
+    asyncio.run(start_health_server(port=8080))
 
 
 if __name__ == "__main__":
+    # logging.basicConfig(
+    #     level=logging.INFO, format="%(asctime)s - %(levelname)s  %(name)s - %(message)s"
+    # )
+    logger = logging.getLogger(__name__)
+
+    logger.info("Starting health server in background thread...")
+    thread = threading.Thread(target=start_health_server_thread, daemon=True)
+    thread.start()
+
+    # TODO: improve it, set_ready should be called when the agent is ready
+    set_ready(True)
+
+    logger.info("Starting LiveKit agents main entrypoint...")
     agents.cli.run_app(
-        agents.WorkerOptions(entrypoint_fnc=app_entrypoint, prewarm_fnc=prewarm)
+        agents.WorkerOptions(entrypoint_fnc=entrypoint, prewarm_fnc=prewarm)
     )
