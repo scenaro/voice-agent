@@ -33,5 +33,4 @@ async def feature_search_products_highlight(
     print("📤 Réponse du tool feature_search_products_highlight:")
     print(f"   {json.dumps(tool_result, indent=2, ensure_ascii=False)}")
 
-    # Utiliser la nouvelle fonction utilitaire pour formater la réponse
     return format_tool_result(tool_result, "feature_search_products_highlight")

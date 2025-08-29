@@ -22,7 +22,7 @@ export const useWindowResize = (): WindowSize => {
       });
     };
 
-    // Écouter les changements de taille
+    // Listen for size changes
     window.addEventListener("resize", handleResize);
 
     // Cleanup

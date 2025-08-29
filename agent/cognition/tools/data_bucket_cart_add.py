@@ -20,7 +20,7 @@ async def data_bucket_cart_add(
 
     session_dir = Path(__file__).parent.parent
 
-    # Adapter le message selon le nombre de produits
+    # Adapt the message according to the number of products
     if len(product_ids) == 1:
         context.session.say("Parfait, j'ajoute ce vin à votre panier.")
     else:
@@ -49,5 +49,5 @@ async def data_bucket_cart_add(
     # Cancel status update if loading completed before timeout
     # status_update_task.cancel()
 
-    # Utiliser la nouvelle fonction utilitaire pour formater la réponse
+    # Use the new utility function to format the response
     return format_tool_result(tool_result, "data_bucket_cart_add")

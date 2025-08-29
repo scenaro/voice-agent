@@ -63,17 +63,21 @@ L'interface web sera disponible sur : <http://localhost:4321>
 
 ## Production
 
-### Build containers
+### Build containers (local)
+
+Créer localement les images de prod (pour tester le build localement) :
 
 ```bash
-# Build avec tag par défaut (latest)
+# Build with default tag (latest)
 just prod-build-agent
 just prod-build-front
 
-# Build avec tag personnalisé
+# Build with custom tag
 just prod-build-agent v1.0.0
 just prod-build-front v1.0.0
 ```
+
+Pour Kubernetes, vor le dossier `docker/k8` et la commande `just` pour lister toutes les commandes disponibles.
 
 ## Dépannage
 

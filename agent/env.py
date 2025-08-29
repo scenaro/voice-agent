@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Vérification de la version Python
+# Python version check
 if sys.version_info < (3, 13):
     print("❌ Python 3.13+ requis")
     sys.exit(1)

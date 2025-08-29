@@ -26,11 +26,11 @@ export const useMultibandTrackVolume = (
         audioContext = new AudioContext();
         analyser = audioContext.createAnalyser();
 
-        // Configuration de l'analyseur
+        // Analyser configuration
         analyser.fftSize = 256;
         analyser.smoothingTimeConstant = 0.8;
 
-        // Obtenir le MediaStream du track
+        // Get the MediaStream from the track
         mediaStream = new MediaStream([track.mediaStreamTrack]);
         const source = audioContext.createMediaStreamSource(mediaStream);
         source.connect(analyser);
@@ -38,7 +38,7 @@ export const useMultibandTrackVolume = (
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
 
-        // Calculer la taille de chaque bande
+        // Calculate the size of each band
         const bandSize = Math.floor(bufferLength / bands);
 
         const updateVolume = () => {
@@ -58,7 +58,7 @@ export const useMultibandTrackVolume = (
             }
 
             const average = sum / (end - start);
-            const normalized = average / 255; // Normaliser entre 0 et 1
+            const normalized = average / 255; // Normalize between 0 and 1
 
             newVolumes.push([normalized]);
           }

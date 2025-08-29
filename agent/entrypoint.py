@@ -31,7 +31,7 @@ def prewarm(proc):
 
 
 async def entrypoint(ctx: agents.JobContext):
-    # Créer l'agent avec les instructions et les composants
+    # Create the agent with instructions and components
     agent = ChatSessionLiveKitAgent(
         ctx,
         llm=openai.LLM(model="gpt-4o", temperature=0.7),
@@ -45,7 +45,7 @@ async def entrypoint(ctx: agents.JobContext):
         stt=deepgram.STT(model="nova-2", language="fr"),
     )
 
-    # Créer la session
+    # Create the session
     session = AgentSession(
         max_tool_steps=3,
         user_away_timeout=30,

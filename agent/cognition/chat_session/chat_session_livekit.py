@@ -9,7 +9,7 @@ from livekit.agents import (
 from cognition.utils import load_function_tools
 
 
-# Classe de l'agent principal
+# Main agent class
 class ChatSessionLiveKitAgent(Agent):
     print("🚀 Loading ChatSessionLiveKitAgent...")
 
@@ -21,7 +21,7 @@ class ChatSessionLiveKitAgent(Agent):
         vad=None,
         stt=None,
     ) -> None:
-        # Charger le system prompt
+        # Load the system prompt
         session_dir = Path(__file__).parent.parent
         try:
             with open(session_dir / "system_prompt.md", "r", encoding="utf-8") as f:

@@ -12,11 +12,6 @@ dev-dc *args:
   echo "docker compose dev command (from host)"
   (cd ./docker/dev/ && docker compose {{args}}; exit $?);
 
-devtools-up:
-  #!/bin/bash
-  echo "docker compose up for devtools (from host)"
-  (cd ./docker/devtools/ && docker compose up; exit $?);
-
 # docker compose wrapper to exec bash in agent container (from host).
 dev-agent:
   #!/bin/bash

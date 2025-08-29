@@ -17,14 +17,13 @@ export function ConnectionProvider({ children }: { children: React.ReactNode }) 
   const connect = useCallback(async () => {
     let token = "";
 
-    // Utiliser l'URL LiveKit depuis les variables d'environnement Astro
     if (!LIVEKIT_URL) {
       throw new Error("LIVEKIT_URL is not set");
     }
     const url = LIVEKIT_URL;
 
     try {
-      // Appeler l'API token d'Astro
+      // Call the Astro token API
       const response = await fetch("/api/token", {
         method: "POST",
         headers: {

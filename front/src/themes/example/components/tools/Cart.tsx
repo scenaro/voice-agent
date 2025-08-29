@@ -14,7 +14,7 @@ export default function Cart() {
   useEffect(() => {
     if (dataAdd) {
       console.log("data_bucket_cart_add - data received:", dataAdd);
-      // dataAdd contient maintenant directement un array de product_ids
+
       const newItems = Array.isArray(dataAdd) ? dataAdd : [];
       setCart([...cart, ...newItems]);
       setCount(cart.length + newItems.length);
@@ -24,7 +24,7 @@ export default function Cart() {
   useEffect(() => {
     if (dataRemove) {
       console.log("data_bucket_cart_remove - data received:", dataRemove);
-      // dataRemove contient maintenant directement un array de product_ids
+
       const itemsToRemove: string[] = Array.isArray(dataRemove) ? dataRemove : [];
       let newCart = [...cart];
       itemsToRemove.forEach((id: string) => {
@@ -38,16 +38,16 @@ export default function Cart() {
   useEffect(() => {
     if (dataReplace) {
       console.log("data_bucket_cart_replace - data received:", dataReplace);
-      // dataReplace contient maintenant {product_ids: [...], new_product_ids: [...]}
+
       const oldIds: string[] = dataReplace.product_ids || [];
       const newIds: string[] = dataReplace.new_product_ids || [];
 
       let newCart = [...cart];
-      // Supprimer les anciens IDs
+      // Remove the old IDs
       oldIds.forEach((id: string) => {
         newCart = rmItem(newCart, id);
       });
-      // Ajouter les nouveaux IDs
+      // Add the new IDs
       newCart = [...newCart, ...newIds];
 
       setCart(newCart);

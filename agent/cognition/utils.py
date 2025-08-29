@@ -1,4 +1,4 @@
-# Fonction utilitaire pour formater les réponses des tools
+# Utility function for formatting tool responses
 import importlib
 import json
 import logging
@@ -12,7 +12,7 @@ from livekit.agents import function_tool
 
 logger = logging.getLogger(__name__)
 
-# Configuration des outils avec leurs métadonnées
+# Tool configuration with their metadata
 tools_def = {
     "feature_ask_knowledge_base_question": {"publish_data": False},
     "feature_search_products_search": {"publish_data": True},
@@ -47,16 +47,16 @@ def format_tool_result(tool_result: Dict[str, Any], tool_name: str) -> str:
     }
 
 
-# Middleware qui intercepte les fonctions tools, inject le JobContext et publie le résultat du tool au front
+# Middleware that intercepts tool functions, injects JobContext and publishes the tool result to the frontend
 def handle_tool(fn, ctx: agents.JobContext, publish_data=False):
     import inspect
     from functools import wraps
 
-    # Obtenir la signature originale de la fonction
+    # Get the original function signature
     sig = inspect.signature(fn)
 
-    # Créer une nouvelle signature sans le premier paramètre (ctx)
-    params = list(sig.parameters.values())[1:]  # Exclure le premier paramètre (ctx)
+    # Create a new signature without the first parameter (ctx)
+    params = list(sig.parameters.values())[1:]  # Exclude the first parameter (ctx)
     new_sig = sig.replace(parameters=params)
 
     @wraps(fn)
@@ -89,18 +89,18 @@ def handle_tool(fn, ctx: agents.JobContext, publish_data=False):
         ```
         """
 
-    # Appliquer la nouvelle signature au handler
+    # Apply the new signature to the handler
     handler.__signature__ = new_sig
 
     return function_tool(handler)
 
 
-# Load function tools basées sur tools.json
+# Load function tools based on tools.json
 def load_function_tools(ctx: agents.JobContext):
     """Charge les function tools basées sur tools.json et tools_def"""
     tools = []
 
-    # Lire tools.json pour connaître les outils disponibles
+    # Read tools.json to know available tools
     try:
         with open(Path(__file__).parent / "tools.json", "r", encoding="utf-8") as f:
             tools_config = json.load(f)
@@ -121,23 +121,23 @@ def load_function_tools(ctx: agents.JobContext):
     for tool_def in tools_config:
         tool_name = list(tool_def.keys())[0]
 
-        # Vérifier que l'outil est dans tools_def
+        # Check that the tool is in tools_def
         if tool_name not in tools_def:
             logger.warning(
                 f"⚠️ Outil {tool_name} trouvé dans tools.json mais pas dans tools_def - ignoré"
             )
             continue
 
-        # Import dynamique
+        # Dynamic import
         try:
             module = importlib.import_module(f"cognition.tools.{tool_name}")
             tool_function = getattr(module, tool_name)
 
-            # Récupérer la configuration
+            # Get the configuration
             config = tools_def[tool_name]
             publish_data = config["publish_data"]
 
-            # Appliquer handle_tool
+            # Apply handle_tool
             tools.append(handle_tool(tool_function, ctx, publish_data=publish_data))
             logger.info(f"✅ Outil {tool_name} chargé (publish_data={publish_data})")
             print(

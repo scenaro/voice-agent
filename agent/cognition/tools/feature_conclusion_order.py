@@ -39,5 +39,4 @@ async def feature_conclusion_order(ctx: agents.JobContext, context: RunContext) 
     # Cancel status update if loading completed before timeout
     # status_update_task.cancel()
 
-    # Utiliser la nouvelle fonction utilitaire pour formater la réponse
     return format_tool_result(tool_result, "feature_conclusion_order")

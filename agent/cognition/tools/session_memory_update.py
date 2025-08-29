@@ -29,6 +29,4 @@ async def session_memory_update(
     tool_result = responses.get("session_memory_update", {})
     print("📤 Réponse du tool session_memory_update:")
     print(f"   {json.dumps(tool_result, indent=2, ensure_ascii=False)}")
-
-    # Utiliser la nouvelle fonction utilitaire pour formater la réponse
     return format_tool_result(tool_result, "session_memory_update")

@@ -29,7 +29,7 @@ async def data_bucket_cart_replace(
 
     session_dir = Path(__file__).parent.parent
 
-    # Adapter le message selon le nombre de produits
+    # Adapt the message according to the number of products
     if len(product_ids) == 1:
         context.session.say("Parfait, je remplace ce vin dans votre panier.")
     else:
@@ -59,6 +59,4 @@ async def data_bucket_cart_replace(
 
     # Cancel status update if loading completed before timeout
     # status_update_task.cancel()
-
-    # Utiliser la nouvelle fonction utilitaire pour formater la réponse
     return format_tool_result(tool_result, "data_bucket_cart_replace")

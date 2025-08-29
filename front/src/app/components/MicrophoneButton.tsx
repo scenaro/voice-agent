@@ -24,7 +24,7 @@ export function MicrophoneButton({ localMultibandVolume }: MicrophoneButtonProps
       return null;
     }
 
-    // Calculer le volume moyen
+    // Calculate the average volume
     const avgVolume = localMultibandVolume.reduce((sum, band) => {
       const bandAvg = band.reduce((a, b) => a + b, 0) / band.length;
       return sum + bandAvg;
@@ -53,10 +53,10 @@ export function MicrophoneButton({ localMultibandVolume }: MicrophoneButtonProps
     );
   }, [isMicrophoneEnabled, localMultibandVolume]);
 
-  // Mémorise le DeviceSelector séparément pour éviter les re-renders
+  // Memoize the DeviceSelector separately to avoid re-renders
   const deviceSelector = useMemo(() => {
     return <DeviceSelector kind="audioinput" />;
-  }, []); // Pas de dépendances = ne re-render que si le composant parent le force
+  }, []); // No dependencies = only re-render if the parent component forces it
 
   return (
     <div id="sc-microphone-button-content">
@@ -80,7 +80,6 @@ const handleToggleMicrophone = async (localParticipant: any, isMicrophoneEnabled
   try {
     await localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
   } catch (err: any) {
-    // Affichez un retour utilisateur et, si pertinent, logguez l'erreur.
     if (err && err.name === "NotAllowedError") {
       alert(
         "L'accès au micro est bloqué. Vérifiez les permissions depuis les paramètres du navigateur OU du système (Cherchez votre navigateur dans les paramètres puis : Permissions > Microphone). Rechargez la page après l'activation du micro."
@@ -90,7 +89,7 @@ const handleToggleMicrophone = async (localParticipant: any, isMicrophoneEnabled
         "Erreur lors de l'activation du micro. Merci de vérifier vos permissions navigateur/système."
       );
     }
-    // Pour debug : affichez dans la console
-    console.error("Erreur micro LiveKit :", err);
+
+    console.error("LiveKit microphone error:", err);
   }
 };
